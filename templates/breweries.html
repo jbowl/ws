@@ -1,0 +1,402 @@
+<html>
+
+<head>
+  <title>Put something here...</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    body {
+      background-image: -webkit-radial-gradient(10% 30%, white, black);
+      margin: 0;
+      height: 100%;
+    }
+
+    .hidden>div {
+      display: none;
+    }
+
+    .hidden>input {
+      display: none;
+    }
+
+
+    .visible>div {
+      display: block;
+    }
+
+    table,
+    th,
+    td {
+      border: 0px solid black;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding-top: 10px;
+      padding-bottom: 20px;
+      padding-left: 30px;
+      padding-right: 40px;
+    }
+
+
+    h1 {
+      margin: 25px;
+      padding: 25px 0;
+      font-family: Arial;
+      color: black;
+      line-height: 40px;
+      font-size: 40pt;
+    }
+
+
+    h3 {
+      margin: 0px;
+      padding: 5px 0;
+      font-family: Arial;
+      color: black;
+      line-height: 25px;
+      font-size: 25pt;
+    }
+
+    select {
+      font-family: "Courier New", Courier, monospace
+    }
+
+    .slidecontainer {
+      width: 100%;
+      /* Width of the outside container */
+    }
+
+    /* The slider itself */
+
+    .slider {
+      -webkit-appearance: none;
+      /* Override default CSS styles */
+      appearance: none;
+      width: 100%;
+      /* Full-width */
+      height: 25px;
+      /* Specified height */
+      background: #d3d3d3;
+      /* Grey background */
+      outline: none;
+      /* Remove outline */
+      opacity: 0.7;
+      /* Set transparency (for mouse-over effects on hover) */
+      -webkit-transition: .2s;
+      /* 0.2 seconds transition on hover */
+      transition: opacity .2s;
+    }
+
+    /* Mouse-over effects */
+    .slider:hover {
+      opacity: 1;
+      /* Fully shown on mouse-over */
+    }
+
+    /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      /* Override default look */
+      appearance: none;
+      width: 25px;
+      /* Set a specific slider handle width */
+      height: 25px;
+      /* Slider handle height */
+      background: red;
+      /* Green background */
+      cursor: pointer;
+      /* Cursor on hover */
+    }
+
+    .slider::-moz-range-thumb {
+      width: 25px;
+      /* Set a specific slider handle width */
+      height: 25px;
+      /* Slider handle height */
+      background: red;
+      /* Green background */
+      cursor: pointer;
+      /* Cursor on hover */
+    }
+
+
+    .brewery_container {
+
+      margin-top: 0px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- <div class = "row" style="background-color:#9C7A4D;"> -->
+
+  <div>
+
+    <h1>Find a brewery...</h1>
+
+    <hr>
+    <div style="width: 500px;">
+      <table width="100%">
+        <!-- <tr style="height:1200px"> -->
+        <tr>
+          <td width=50%>
+            <form id="queryctrls">
+              <fieldset>
+                <table>
+                  <tr>
+                    <td width="60%">
+                      Enter one or more...
+                      <input type="text" id="qname" name="name" placeholder="Name of Brewery"><br> <br>
+                      <input type="text" id="qcity" name="city" placeholder="City"><br> <br>
+                      <input type="text" id="qstate" name="state" placeholder="State"><br><br>
+                      <input type="text" id="qpostal" name="postal" placeholder="Postal"><br><br>
+                    </td>
+                    <td>
+                      <fieldset>
+                        <legend>Choose type</legend>
+                        <label><input type="radio" id="all" name="by_type" value="all" checked>all</label> <br>
+                        <label><input type="radio" id="micro" name="by_type" value="micro">micro</label> <br>
+                        <label><input type="radio" id="nano" name="by_type" value="nano">nano</label> <br>
+                        <label><input type="radio" id="regional" name="by_type" value="regional">regional</label>
+                        <br>
+                        <label><input type="radio" id="brewpub" name="by_type" value="brewpub">brewpub</label> <br>
+                        <label><input type="radio" id="planning" name="by_type" value="planning">planning</label>
+                        <br>
+                      </fieldset>
+                    </td>
+                  </tr>
+                </table>
+                <div style="margin-left:375px">
+                  <input id="sendquery" type="submit" value="Find..." />
+                </div>
+              </fieldset>
+            </form>
+          </td>
+          <!--
+          padding-top: 10px;
+          padding-bottom: 20px;
+          padding-left: 30px;
+          padding-right: 40px;
+-->
+
+          <td>
+            <div class="brewery_container hidden" style="margin-top:10px">
+              <h2 style="margin-left:25px;" id="name"></h2>
+              <div style="margin-left:35px;">
+                <p id="type"></p>
+                <p id="address"></p>
+                <p id="phone"></p>
+                <a id="link" href="url" target="_blank"></a>
+              </div>
+              <br>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="selDiv">
+              <select name="breweries" id="breweries" size="38" style="width: 500px;">
+              </select>
+              <p id="count">Count - 0</p>
+            </div>
+
+          </td>
+
+          <td>
+            <div class="brewery_container hidden" style="margin-top:0px">
+
+              <img id="map" />
+
+              <div class="slidecontainer" style="width: 640px; margin-top:5px">
+                <input type="range" min="0" max="20" value="18" class="slider" id="myRange">
+              </div>
+
+            </div>
+          </td>
+
+
+        </tr>
+
+
+      </table>
+    </div>
+  </div>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  <script>
+
+    var slider = document.getElementById("myRange");
+    var data = [];
+    var key = "AIzaSyAwmV_cYLnOYzYzhTp5C2W97RVLlL-U_kE";
+
+    slider.oninput = function () {
+      show(this.value);
+    }
+
+    function show(zoom) {
+
+      var select = $("#breweries")
+      var value = select[0].selectedIndex
+      obj = data[value]
+
+      var location = obj.street + "," + obj.city + "," + obj.state + "," + obj.postal_code
+
+      let str =
+        "https://maps.googleapis.com/maps/api/staticmap?size=640x640&maptype=roadmap&key=";
+      str += key;
+      //str += "AIzaSyAwmV_cYLnOYzYzhTp5C2W97RVLlL-U_kE";
+      str += "&zoom=" + zoom;
+      str += "&center= " + location;
+      str += "&markers=color:red|" + location;
+
+
+      document.getElementById('map').src = str
+
+    }
+
+
+    $.fn.alwaysChange = function (callback) {
+      return this.each(function () {
+        var elem = this;
+        var $this = $(this);
+
+        $this.change(function () {
+          if (callback) callback($this.val());
+        }).focus(function () {
+          elem.selectedIndex = -1;
+          elem.blur();
+        });
+      });
+    }
+
+
+    // click on an option
+    $('select').alwaysChange(function (val) {
+      console.log("hello")
+
+      var select = $("#breweries")
+
+      var value = select[0].selectedIndex
+
+
+      obj = data[value]
+
+      $("#name").text(obj.name)
+      $("#type").text("type - " + obj.brewery_type)
+      $("#address").text(obj.street + ", " + obj.city + ", " + obj.state + ", " + obj.postal_code)
+      $("#phone").text("phone - " + obj.phone)
+
+      $("#link").attr("href", obj.website_url)
+      $("#link").text(obj.website_url)
+
+
+
+      $("input[type=range]").val(18);
+      val = $("input[type=range]").val();
+      show(18)
+      $('.brewery_container').removeClass("hidden");
+
+    });
+
+
+    $(function () {
+      var socket = null;
+      var select = $("#breweries")
+      $("#queryctrls").submit(function () {
+
+        if (!socket) {
+          alert("Error: There is no socket connection.");
+          return false;
+        }
+
+        $("#breweries").empty();
+        data = [];
+
+        n = $("#qname").val()
+        c = $("#qcity").val()
+        s = $("#qstate").val()
+        p = $("#qpostal").val()
+
+        query = ""
+
+        if (n.length) {
+          query += "by_name=" + n
+        }
+
+        if (c.length) {
+          if (query.length) {
+            query += "&"
+          }
+          query += "by_city=" + c
+        }
+
+        if (s.length) {
+          if (query.length) {
+            query += "&"
+          }
+          query += "by_state=" + s
+        }
+
+        if (p.length) {
+          if (query.length) {
+            query += "&"
+          }
+          query += "by_postal=" + p
+        }
+
+
+
+
+
+
+        if (!query.length) {
+          return false
+        }
+
+        query += "&sort=type,name:asc"
+
+        var checked = $("input[name='by_type']:checked").val();
+
+        if (checked && checked != "all") {
+
+          query += "&by_type=" + checked
+
+        }
+
+
+
+        socket.send(query);
+        return false;
+
+      });
+
+      if (!window["WebSocket"]) {
+        alert("Error: Your browser does not support web sockets.")
+      } else {
+        //socket = new WebSocket("ws://{{.Host}}/ws");
+        socket = new WebSocket("wss://breweries.jbowl.dev/ws");
+        socket.onclose = function () {
+          alert("Connection has been closed.");
+        }
+
+        select[0].options.length = 0
+
+        socket.onmessage = function (e) {
+
+
+
+          obj = JSON.parse(e.data)
+          data.push(obj)
+          select[0].options[select[0].options.length] = new Option(obj.name)
+          $("#count").text("count - " + select[0].options.length)
+        }
+      }
+    });
+
+  </script>
+</body>
+
+</html>
