@@ -224,6 +224,7 @@
     var slider = document.getElementById("myRange");
     var data = [];
     var key = "AIzaSyAwmV_cYLnOYzYzhTp5C2W97RVLlL-U_kE";
+    //var socket = null;
 
     slider.oninput = function () {
       show(this.value);
@@ -363,8 +364,24 @@
     }
 
 
+    function onerror(e) {
+      console.log(e)
+      //      connect()
+    }
+
+    function onclose() {
+      //alert("Connection has been closed.");
+      // reset connection 
+      setTimeout(function () {
+        socket = new WebSocket("wss://breweries.jbowl.dev/ws");
+        socket.onmessage = message
+        socket.onerror = onerror
+        socket.onclose = onclose
+      }, 1000);
+
+    }
+
     $(function () {
-      var socket = null;
       var select = $("#breweries")
       $("#queryctrls").submit(function () {
 
@@ -378,7 +395,6 @@
         data = [];
 
         query = userquery();
-
         socket.send(query);
         return false;
 
@@ -389,30 +405,10 @@
       } else {
         //socket = new WebSocket("ws://{{.Host}}/ws");
         socket = new WebSocket("wss://breweries.jbowl.dev/ws");
-        socket.onclose = function () {
-
-          //alert("Connection has been closed.");
-          // reset connection 
-          setTimeout(function () {
-            socket = new WebSocket("wss://breweries.jbowl.dev/ws");
-            socket.onmessage = message
-          }, 1000);
-
-        }
-
+        socket.onclose = onclose;
         select[0].options.length = 0
         socket.onmessage = message
-        /*
-                socket.onmessage = function (e) {
-        
-        
-        
-                  obj = JSON.parse(e.data)
-                  data.push(obj)
-                  select[0].options[select[0].options.length] = new Option(obj.name)
-                  $("#count").text("count - " + select[0].options.length)
-                }
-        */
+        socket.onerror = onerror
       }
     });
 
