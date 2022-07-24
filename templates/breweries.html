@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>Put something here...</title>
+  <title>Breweries</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style type="text/css">
@@ -175,13 +175,6 @@
               </fieldset>
             </form>
           </td>
-          <!--
-          padding-top: 10px;
-          padding-bottom: 20px;
-          padding-left: 30px;
-          padding-right: 40px;
--->
-
           <td>
             <div class="brewery_container hidden" style="margin-top:10px">
               <h2 style="margin-left:25px;" id="name"></h2>
@@ -247,11 +240,9 @@
       let str =
         "https://maps.googleapis.com/maps/api/staticmap?size=640x640&maptype=roadmap&key=";
       str += key;
-      //str += "AIzaSyAwmV_cYLnOYzYzhTp5C2W97RVLlL-U_kE";
       str += "&zoom=" + zoom;
       str += "&center= " + location;
       str += "&markers=color:red|" + location;
-
 
       document.getElementById('map').src = str
 
@@ -302,6 +293,76 @@
     });
 
 
+    function userquery() {
+
+      n = $("#qname").val()
+      c = $("#qcity").val()
+      s = $("#qstate").val()
+      p = $("#qpostal").val()
+
+      query = ""
+
+      if (n.length) {
+        query += "by_name=" + n
+      }
+
+      if (c.length) {
+        if (query.length) {
+          query += "&"
+        }
+        query += "by_city=" + c
+      }
+
+      if (s.length) {
+        if (query.length) {
+          query += "&"
+        }
+        query += "by_state=" + s
+      }
+
+      if (p.length) {
+        if (query.length) {
+          query += "&"
+        }
+        query += "by_postal=" + p
+      }
+
+      if (!query.length) {
+        return false
+      }
+
+      query += "&sort=type,name:asc"
+
+      var checked = $("input[name='by_type']:checked").val();
+
+      if (checked && checked != "all") {
+
+        query += "&by_type=" + checked
+
+      }
+
+      return query
+    }
+
+
+
+    function message(e) {
+
+
+      if (e.data[0] != '{') {
+        return
+      }
+
+      select = $('select')
+
+
+      obj = JSON.parse(e.data)
+      data.push(obj)
+      select[0].options[select[0].options.length] = new Option(obj.name)
+      $("#count").text("count - " + select[0].options.length)
+    }
+
+
     $(function () {
       var socket = null;
       var select = $("#breweries")
@@ -313,60 +374,10 @@
         }
 
         $("#breweries").empty();
+
         data = [];
 
-        n = $("#qname").val()
-        c = $("#qcity").val()
-        s = $("#qstate").val()
-        p = $("#qpostal").val()
-
-        query = ""
-
-        if (n.length) {
-          query += "by_name=" + n
-        }
-
-        if (c.length) {
-          if (query.length) {
-            query += "&"
-          }
-          query += "by_city=" + c
-        }
-
-        if (s.length) {
-          if (query.length) {
-            query += "&"
-          }
-          query += "by_state=" + s
-        }
-
-        if (p.length) {
-          if (query.length) {
-            query += "&"
-          }
-          query += "by_postal=" + p
-        }
-
-
-
-
-
-
-        if (!query.length) {
-          return false
-        }
-
-        query += "&sort=type,name:asc"
-
-        var checked = $("input[name='by_type']:checked").val();
-
-        if (checked && checked != "all") {
-
-          query += "&by_type=" + checked
-
-        }
-
-
+        query = userquery();
 
         socket.send(query);
         return false;
@@ -379,20 +390,29 @@
         //socket = new WebSocket("ws://{{.Host}}/ws");
         socket = new WebSocket("wss://breweries.jbowl.dev/ws");
         socket.onclose = function () {
-          alert("Connection has been closed.");
+
+          //alert("Connection has been closed.");
+          // reset connection 
+          setTimeout(function () {
+            socket = new WebSocket("wss://breweries.jbowl.dev/ws");
+            socket.onmessage = message
+          }, 1000);
+
         }
 
         select[0].options.length = 0
-
-        socket.onmessage = function (e) {
-
-
-
-          obj = JSON.parse(e.data)
-          data.push(obj)
-          select[0].options[select[0].options.length] = new Option(obj.name)
-          $("#count").text("count - " + select[0].options.length)
-        }
+        socket.onmessage = message
+        /*
+                socket.onmessage = function (e) {
+        
+        
+        
+                  obj = JSON.parse(e.data)
+                  data.push(obj)
+                  select[0].options[select[0].options.length] = new Option(obj.name)
+                  $("#count").text("count - " + select[0].options.length)
+                }
+        */
       }
     });
 

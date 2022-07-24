@@ -88,7 +88,7 @@ func reader(client hodlapi.BreweryServiceClient, conn *websocket.Conn) {
 		messageType, p, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
-			//return
+			return
 		}
 
 		// expecting in the format "by_state=&...."
@@ -150,6 +150,11 @@ func Breweries(client hodlapi.BreweryServiceClient) http.Handler {
 				log.Println(err)
 			}
 
+			log.Println("Client Connected")
+			//			err = ws.WriteMessage(1, []byte("{Hi Client!}"))
+			//			if err != nil {
+			//				log.Println(err)
+			//			}
 			// listen indefinitely for new messages coming
 			// through on our WebSocket connection
 			reader(client, ws)

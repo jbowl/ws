@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github/jbowl/ws/server"
 	"os"
 	"sync/atomic"
 	"time"
-	"ws/server"
 
 	log "github.com/sirupsen/logrus"
 )
